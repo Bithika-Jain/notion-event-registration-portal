@@ -5,6 +5,9 @@ const API = window.location.hostname === 'localhost' || window.location.hostname
   ? '/api'
   : (window.BACKEND_URL || '/api');
 
+// ── Prefetch — fire API request immediately on script load, before anything renders
+const _eventsPrefetch = fetch(`${API}/events`).then(r => r.json()).catch(() => null);
+
 // ── State ─────────────────────────────────────────────────────────────────────
 let currentEventSlug = null;
 let currentEventData = null;
@@ -71,21 +74,36 @@ function showPage(name, slug) {
 }
 
 // ── HOME ──────────────────────────────────────────────────────────────────────
-let allEvents = []; // cache for filtering
+let allEvents = [];
+
+// Seed data — renders instantly while API cold-starts in background
+const SEED_EVENTS = [
+  { id:1, slug:'build-with-ai-2025', title:'Build with AI Workshop', tagline:'Go from idea to deployed product in one day.', date:'2025-07-19', time_start:'10:00 AM', time_end:'5:00 PM', venue:'AB1 Seminar Hall, VIT Bhopal', is_free:1, is_online:0, price:'Free', seats:80, category:'Workshop', status:'upcoming', registered_count:0 },
+  { id:2, slug:'web3-bootcamp-2025', title:'Web3 & Blockchain Bootcamp', tagline:'Decode decentralisation. Build your first dApp.', date:'2025-08-09', time_start:'9:00 AM', time_end:'6:00 PM', venue:'AB2 Lecture Hall, VIT Bhopal', is_free:0, is_online:0, price:'₹99', seats:60, category:'Bootcamp', status:'upcoming', registered_count:0 },
+  { id:3, slug:'notion-productivity-masterclass', title:'Notion Productivity Masterclass', tagline:'Build your second brain. Ship faster.', date:'2025-09-06', time_start:'11:00 AM', time_end:'3:00 PM', venue:'Online (Zoom)', is_free:1, is_online:1, price:'Free', seats:200, category:'Workshop', status:'upcoming', registered_count:0 },
+  { id:4, slug:'open-source-sprint-2025', title:'Open Source Sprint', tagline:'Your first PR is one day away.', date:'2025-03-15', time_start:'10:00 AM', time_end:'4:00 PM', venue:'Open Auditorium, VIT Bhopal', is_free:1, is_online:0, price:'Free', seats:70, category:'Hackathon', status:'past', registered_count:70 },
+  { id:5, slug:'ui-ux-design-crash-course', title:'UI/UX Design Crash Course', tagline:'Design interfaces people love, not just use.', date:'2025-02-22', time_start:'10:00 AM', time_end:'5:00 PM', venue:'Main Auditorium, VIT Bhopal', is_free:1, is_online:0, price:'Free', seats:90, category:'Workshop', status:'past', registered_count:90 },
+  { id:6, slug:'python-for-data-science', title:'Python for Data Science', tagline:'From zero to your first ML model.', date:'2025-01-18', time_start:'10:00 AM', time_end:'4:00 PM', venue:'Online (Google Meet)', is_free:1, is_online:1, price:'Free', seats:150, category:'Workshop', status:'past', registered_count:150 },
+];
 
 async function loadHome() {
+  // Step 1 — render immediately from seed data (zero wait)
+  allEvents = SEED_EVENTS;
+  applyFilter('all');
+  initFilterTabs();
+  animateStats();
+  initTestimonials();
+
+  // Step 2 — fetch real data in background and update if different
   try {
-    const res  = await fetch(`${API}/events`);
-    const { data } = await res.json();
-    allEvents = data;
-    applyFilter('all');
-    initFilterTabs();
-    animateStats();
-    initTestimonials();
-  } catch {
-    document.getElementById('upcoming-grid').innerHTML =
-      `<p style="color:var(--red);font-size:14px">Failed to load events. Is the server running?</p>`;
-  }
+    const result = await _eventsPrefetch;
+    if (result?.data?.length) {
+      allEvents = result.data;
+      applyFilter(
+        document.querySelector('.filter-tab.active')?.dataset.filter || 'all'
+      );
+    }
+  } catch { /* keep seed data */ }
 }
 
 function applyFilter(filter) {
@@ -185,6 +203,7 @@ function renderGrid(id, events, isPast) {
     return `
     <div class="event-card ${isPast ? 'past-card' : ''}"
       ${!isPast ? `onclick="showPage('event','${e.slug}')"` : ''}
+      ${!isPast ? `onmouseenter="prefetchEvent('${e.slug}')"` : ''}
       role="${isPast ? 'article' : 'button'}" tabindex="${isPast ? -1 : 0}"
       onkeydown="if(event.key==='Enter'&&!${isPast})showPage('event','${e.slug}')">
       <div class="card-banner"><div class="card-banner-overlay"></div><div class="card-banner-icon">${categoryIcon(e.category)}</div></div>
@@ -217,18 +236,34 @@ function renderGrid(id, events, isPast) {
 }
 
 // ── EVENT DETAIL ──────────────────────────────────────────────────────────────
+const _eventCache = {};
+
+// Called on card hover — warms the cache before user clicks
+function prefetchEvent(slug) {
+  if (_eventCache[slug]) return;
+  _eventCache[slug] = fetch(`${API}/events/${slug}`).then(r => r.json()).catch(() => null);
+}
+
 async function loadEventDetail(slug) {
   currentEventSlug = slug;
   const c = document.getElementById('event-detail-content');
-  c.innerHTML = `<div style="padding:100px 0;text-align:center;color:var(--text-3)">Loading…</div>`;
+
+  // Show skeleton immediately
+  c.innerHTML = `<div class="event-detail-page">
+    <div style="padding:40px 0 20px"><div class="skeleton-card" style="height:280px;border-radius:16px"></div></div>
+    <div class="skeleton-card" style="height:64px;margin:12px 0;border-radius:12px"></div>
+    ${[1,2,3].map(() => `<div class="skeleton-card" style="height:120px;margin:12px 0;border-radius:12px"></div>`).join('')}
+  </div>`;
+
   try {
-    const res = await fetch(`${API}/events/${slug}`);
-    if (!res.ok) throw new Error();
-    const { data } = await res.json();
-    currentEventData = data;
-    renderEventDetail(data, c);
+    // Use prefetched promise if available, otherwise fetch now
+    if (!_eventCache[slug]) prefetchEvent(slug);
+    const result = await _eventCache[slug];
+    if (!result?.data) throw new Error('No data');
+    currentEventData = result.data;
+    renderEventDetail(result.data, c);
   } catch {
-    c.innerHTML = `<div style="padding:80px 24px;color:var(--red)">Failed to load event. Please go back and try again.</div>`;
+    c.innerHTML = `<div style="padding:80px 24px;color:var(--red);text-align:center">Failed to load event. Please go back and try again.</div>`;
   }
 }
 
