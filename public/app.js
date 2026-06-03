@@ -1,5 +1,9 @@
 'use strict';
-const API = '/api';
+// When deployed on Vercel (frontend only), API_BASE points to the local/backend server.
+// For full local dev, it uses relative /api path.
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? '/api'
+  : (window.BACKEND_URL || '/api');
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let currentEventSlug = null;

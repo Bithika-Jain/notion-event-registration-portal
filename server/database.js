@@ -2,15 +2,12 @@ const initSqlJs = require('sql.js');
 const path = require('path');
 const fs = require('fs');
 
-const dataDir = path.join(__dirname, '../data');
-const dbPath = path.join(dataDir, 'portal.db');
-
-// On Vercel the filesystem is read-only except /tmp
 const isVercel = !!process.env.VERCEL;
-const persistPath = isVercel ? '/tmp/portal.db' : dbPath;
+const persistPath = isVercel ? '/tmp/portal.db' : path.join(__dirname, '../data/portal.db');
 
-if (!isVercel && !fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+if (!isVercel) {
+  const dataDir = path.join(__dirname, '../data');
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 }
 
 let _db = null;
@@ -18,7 +15,11 @@ let _db = null;
 async function initDatabase() {
   if (_db) return _db;
 
-  const SQL = await initSqlJs();
+  // Point sql.js to its wasm file explicitly — required on Vercel
+  const wasmPath = path.join(__dirname, '../node_modules/sql.js/dist/sql-wasm.wasm');
+  const SQL = await initSqlJs({
+    locateFile: () => wasmPath,
+  });
 
   if (fs.existsSync(persistPath)) {
     const fileBuffer = fs.readFileSync(persistPath);
