@@ -1,10 +1,15 @@
 const initSqlJs = require('sql.js');
 
 let _db = null;
+let _initPromise = null;
 
 async function initDatabase() {
-  const SQL = await initSqlJs();
-  _db = new SQL.Database();
+  if (_db) return _db;
+  if (_initPromise) return _initPromise;
+
+  _initPromise = (async () => {
+    const SQL = await initSqlJs();
+    _db = new SQL.Database();
 
   _db.run(`
     CREATE TABLE IF NOT EXISTS events (
@@ -69,19 +74,22 @@ async function initDatabase() {
     )
   `);
 
-  seedEvents();
+  await seedEvents();
 
   console.log('✅ Database initialised (in-memory)');
   return _db;
+  })();
+
+  return _initPromise;
 }
 
 // ── Seed sample events ───────────────────────────────────────────────────────
-function seedEvents() {
-  const count = query('SELECT COUNT(*) as c FROM events')[0]?.c;
+async function seedEvents() {
+  const count = (await query('SELECT COUNT(*) as c FROM events'))[0]?.c;
   if (count > 0) return; // already seeded
 
   // --- UPCOMING EVENTS ---
-  run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
+  await run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
     VALUES (
       'build-with-ai-2025',
       'Build with AI Workshop',
@@ -90,11 +98,11 @@ function seedEvents() {
       '2025-07-19', '10:00 AM', '5:00 PM', 'AB1 Seminar Hall, VIT Bhopal',
       0, 1, 'Free', 80, '🤖', 'Workshop', 'upcoming'
     )`);
-  const e1 = query('SELECT id FROM events WHERE slug = ?', ['build-with-ai-2025'])[0].id;
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e1}, 'Arjun Kumar', 'AI Engineer · Google DeepMind', '5+ years building production ML systems. Former intern at OpenAI.', 'AK')`);
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e1}, 'Priya Rao', 'Full-Stack Dev · ex-Razorpay', 'Shipped 3 SaaS products. Passionate about developer tooling and AI integration.', 'PR')`);
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e1}, 'Vikram Singh', 'Club Lead · Notion VIT Bhopal', 'VIT Bhopal alum. Organizer of 20+ technical events. Open-source contributor.', 'VS')`);
-  [
+  const e1 = (await query('SELECT id FROM events WHERE slug = ?', ['build-with-ai-2025']))[0].id;
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e1}, 'Arjun Kumar', 'AI Engineer · Google DeepMind', '5+ years building production ML systems. Former intern at OpenAI.', 'AK')`);
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e1}, 'Priya Rao', 'Full-Stack Dev · ex-Razorpay', 'Shipped 3 SaaS products. Passionate about developer tooling and AI integration.', 'PR')`);
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e1}, 'Vikram Singh', 'Club Lead · Notion VIT Bhopal', 'VIT Bhopal alum. Organizer of 20+ technical events. Open-source contributor.', 'VS')`);
+  for (const [t, title, detail, sort] of [
     ['9:30 AM', 'Registration & Networking', 'Check in, meet fellow participants, grab coffee.', 1],
     ['10:00 AM', 'Kickoff & Intro to AI Tools', 'Overview of the AI landscape and the tools we will use today.', 2],
     ['11:00 AM', 'Session 1 — Ideation with AI', 'Use LLMs to go from a vague idea to a scoped project spec.', 3],
@@ -102,9 +110,11 @@ function seedEvents() {
     ['2:00 PM', 'Session 2 — Build & Deploy', 'Code, iterate, and ship your project with AI assistance.', 5],
     ['4:30 PM', 'Demo + Q&A', 'Show your project, get feedback, win prizes.', 6],
     ['5:00 PM', 'Certificate Distribution', 'Certificates for all participants. Photo session.', 7],
-  ].forEach(([t, title, detail, sort]) => run(`INSERT INTO schedule (event_id, time, title, detail, sort_order) VALUES (${e1}, '${t}', '${title}', '${detail}', ${sort})`));
+  ]) {
+    await run(`INSERT INTO schedule (event_id, time, title, detail, sort_order) VALUES (${e1}, '${t}', '${title}', '${detail}', ${sort})`);
+  }
 
-  run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
+  await run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
     VALUES (
       'web3-bootcamp-2025',
       'Web3 & Blockchain Bootcamp',
@@ -113,18 +123,20 @@ function seedEvents() {
       '2025-08-09', '9:00 AM', '6:00 PM', 'AB2 Lecture Hall, VIT Bhopal',
       0, 0, '₹99', 60, '⛓️', 'Bootcamp', 'upcoming'
     )`);
-  const e2 = query('SELECT id FROM events WHERE slug = ?', ['web3-bootcamp-2025'])[0].id;
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e2}, 'Sneha Iyer', 'Blockchain Dev · Polygon Labs', 'Core contributor to Polygon SDK. 3+ years in Web3.', 'SI')`);
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e2}, 'Rahul Nair', 'Smart Contract Auditor', 'Audited 50+ DeFi protocols. Ethical hacker and security researcher.', 'RN')`);
-  [
+  const e2 = (await query('SELECT id FROM events WHERE slug = ?', ['web3-bootcamp-2025']))[0].id;
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e2}, 'Sneha Iyer', 'Blockchain Dev · Polygon Labs', 'Core contributor to Polygon SDK. 3+ years in Web3.', 'SI')`);
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e2}, 'Rahul Nair', 'Smart Contract Auditor', 'Audited 50+ DeFi protocols. Ethical hacker and security researcher.', 'RN')`);
+  for (const [t, title, detail, sort] of [
     ['9:00 AM', 'What is Blockchain?', 'Fundamentals: distributed ledgers, consensus mechanisms, cryptography.', 1],
     ['11:00 AM', 'Smart Contracts in Solidity', 'Write, compile and test your first smart contract.', 2],
     ['2:00 PM', 'dApp Frontend with ethers.js', 'Connect Metamask and interact with contracts from a browser.', 3],
     ['4:30 PM', 'Deploy to Testnet', 'Ship your dApp to Goerli testnet live on stage.', 4],
     ['6:00 PM', 'Close & Certificates', 'NFT certificates for all participants.', 5],
-  ].forEach(([t, title, detail, sort]) => run(`INSERT INTO schedule (event_id, time, title, detail, sort_order) VALUES (${e2}, '${t}', '${title}', '${detail}', ${sort})`));
+  ]) {
+    await run(`INSERT INTO schedule (event_id, time, title, detail, sort_order) VALUES (${e2}, '${t}', '${title}', '${detail}', ${sort})`);
+  }
 
-  run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
+  await run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
     VALUES (
       'notion-productivity-masterclass',
       'Notion Productivity Masterclass',
@@ -133,18 +145,20 @@ function seedEvents() {
       '2025-09-06', '11:00 AM', '3:00 PM', 'Online (Zoom)',
       1, 1, 'Free', 200, '📒', 'Workshop', 'upcoming'
     )`);
-  const e3 = query('SELECT id FROM events WHERE slug = ?', ['notion-productivity-masterclass'])[0].id;
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e3}, 'Ananya Menon', 'Notion Ambassador', 'Certified Notion consultant. Helped 30+ teams adopt Notion.', 'AM')`);
-  [
+  const e3 = (await query('SELECT id FROM events WHERE slug = ?', ['notion-productivity-masterclass']))[0].id;
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e3}, 'Ananya Menon', 'Notion Ambassador', 'Certified Notion consultant. Helped 30+ teams adopt Notion.', 'AM')`);
+  for (const [t, title, detail, sort] of [
     ['11:00 AM', 'Notion Fundamentals', 'Pages, databases, views — the building blocks.', 1],
     ['12:00 PM', 'Personal Knowledge System', 'Build a second brain with linked databases.', 2],
     ['1:00 PM', 'Team & Project Management', 'Roadmaps, sprint boards, and docs in one place.', 3],
     ['2:00 PM', 'Notion AI & Automations', 'Automate repetitive tasks and generate content with AI.', 4],
     ['3:00 PM', 'Q&A & Template Handoff', 'Get your personal starter kit templates.', 5],
-  ].forEach(([t, title, detail, sort]) => run(`INSERT INTO schedule (event_id, time, title, detail, sort_order) VALUES (${e3}, '${t}', '${title}', '${detail}', ${sort})`));
+  ]) {
+    await run(`INSERT INTO schedule (event_id, time, title, detail, sort_order) VALUES (${e3}, '${t}', '${title}', '${detail}', ${sort})`);
+  }
 
   // --- PAST EVENTS ---
-  run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
+  await run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
     VALUES (
       'open-source-sprint-2025',
       'Open Source Sprint',
@@ -153,10 +167,10 @@ function seedEvents() {
       '2025-03-15', '10:00 AM', '4:00 PM', 'Open Auditorium, VIT Bhopal',
       0, 1, 'Free', 70, '🌐', 'Hackathon', 'past'
     )`);
-  const e4 = query('SELECT id FROM events WHERE slug = ?', ['open-source-sprint-2025'])[0].id;
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e4}, 'Dev Patel', 'OSS Maintainer · freeCodeCamp', 'Merged 500+ community PRs. Passionate about teaching Git.', 'DP')`);
+  const e4 = (await query('SELECT id FROM events WHERE slug = ?', ['open-source-sprint-2025']))[0].id;
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e4}, 'Dev Patel', 'OSS Maintainer · freeCodeCamp', 'Merged 500+ community PRs. Passionate about teaching Git.', 'DP')`);
 
-  run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
+  await run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
     VALUES (
       'ui-ux-design-crash-course',
       'UI/UX Design Crash Course',
@@ -165,11 +179,11 @@ function seedEvents() {
       '2025-02-22', '10:00 AM', '5:00 PM', 'Main Auditorium, VIT Bhopal',
       0, 1, 'Free', 90, '🎨', 'Workshop', 'past'
     )`);
-  const e5 = query('SELECT id FROM events WHERE slug = ?', ['ui-ux-design-crash-course'])[0].id;
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e5}, 'Kavya Reddy', 'Product Designer · Swiggy', '4 years designing high-scale consumer apps.', 'KR')`);
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e5}, 'Nikhil Shah', 'UX Researcher · Adobe', 'Specialises in usability testing and accessibility.', 'NS')`);
+  const e5 = (await query('SELECT id FROM events WHERE slug = ?', ['ui-ux-design-crash-course']))[0].id;
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e5}, 'Kavya Reddy', 'Product Designer · Swiggy', '4 years designing high-scale consumer apps.', 'KR')`);
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e5}, 'Nikhil Shah', 'UX Researcher · Adobe', 'Specialises in usability testing and accessibility.', 'NS')`);
 
-  run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
+  await run(`INSERT INTO events (slug, title, tagline, description, date, time_start, time_end, venue, is_online, is_free, price, seats, banner_emoji, category, status)
     VALUES (
       'python-for-data-science',
       'Python for Data Science',
@@ -178,18 +192,20 @@ function seedEvents() {
       '2025-01-18', '10:00 AM', '4:00 PM', 'Online (Google Meet)',
       1, 1, 'Free', 150, '🐍', 'Workshop', 'past'
     )`);
-  const e6 = query('SELECT id FROM events WHERE slug = ?', ['python-for-data-science'])[0].id;
-  run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e6}, 'Meera Krishnan', 'Data Scientist · Flipkart', 'Built recommendation systems at scale. Kaggle expert.', 'MK')`);
+  const e6 = (await query('SELECT id FROM events WHERE slug = ?', ['python-for-data-science']))[0].id;
+  await run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e6}, 'Meera Krishnan', 'Data Scientist · Flipkart', 'Built recommendation systems at scale. Kaggle expert.', 'MK')`);
 
   console.log('🌱 Sample events seeded');
 }
 
 // ── DB helpers ───────────────────────────────────────────────────────────────
-function run(sql, params = []) {
+async function run(sql, params = []) {
+  await initDatabase();
   _db.run(sql, params);
 }
 
-function query(sql, params = []) {
+async function query(sql, params = []) {
+  await initDatabase();
   const stmt = _db.prepare(sql);
   if (params.length) stmt.bind(params);
   const rows = [];
@@ -198,11 +214,13 @@ function query(sql, params = []) {
   return rows;
 }
 
-function queryOne(sql, params = []) {
-  return query(sql, params)[0] || null;
+async function queryOne(sql, params = []) {
+  const results = await query(sql, params);
+  return results[0] || null;
 }
 
-function insert(sql, params = []) {
+async function insert(sql, params = []) {
+  await initDatabase();
   _db.run(sql, params);
   const result = _db.exec('SELECT last_insert_rowid() as id');
   return result[0]?.values[0][0] ?? null;
