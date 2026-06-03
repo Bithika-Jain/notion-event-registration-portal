@@ -206,7 +206,7 @@ SQLite file created automatically at `data/portal.db` on first run. Pre-seeded w
 
 ---
 
-## Built By
+## Built For
 
 **Notion VIT Bhopal** — VIT Bhopal's productivity & tech community
 
