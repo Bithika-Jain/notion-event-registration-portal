@@ -5,13 +5,18 @@
       "src": "server/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["public/**", "server/**"]
+        "includeFiles": [
+          "public/**",
+          "server/**",
+          "node_modules/sql.js/dist/**"
+        ]
       }
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "server/index.js" },
-    { "src": "/(.*\\.(js|css|html|png|jpg|svg|ico|woff|woff2))", "dest": "/public/$1" },
-    { "src": "/(.*)", "dest": "server/index.js" }
+    {
+      "src": "/(.*)",
+      "dest": "server/index.js"
+    }
   ]
 }
