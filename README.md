@@ -1,8 +1,8 @@
-# Notion VIT Bhopal — Event Registration Portal
+# Notion Community, VIT Bhopal — Event Registration Portal
 
 ![License](https://img.shields.io/badge/license-MIT-green) ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen) ![Vercel](https://img.shields.io/badge/deployed-Vercel-black)
 
-A full-stack event registration portal for **Notion VIT Bhopal** — a productivity and tech community at VIT Bhopal University.
+A full-stack event registration portal for **Notion Community, VIT Bhopal** — a productivity and tech community at VIT Bhopal University.
 
 ## Live Demo
 
@@ -210,7 +210,7 @@ SQLite file created automatically at `data/portal.db` on first run. Pre-seeded w
 
 ## Built By
 
-**Notion VIT Bhopal** — VIT Bhopal's productivity & tech community
+**Notion Community, VIT Bhopal** — VIT Bhopal's productivity & tech community
 
 - Instagram: [@notion.vit](https://www.instagram.com/notion.vit/)
 - LinkedIn: [Notion VIT](https://in.linkedin.com/company/notion_vit)
