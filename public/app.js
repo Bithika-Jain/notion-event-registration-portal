@@ -967,7 +967,7 @@ window.loadHome = async function() {
   setTimeout(() => {
     initReveal();
     initNavObserver();
-    initLiveFeed();
+    // initLiveFeed runs on DOMContentLoaded, not here
   }, 100);
 };
 
@@ -1029,6 +1029,6 @@ window.showFormError = function(msg) {
 document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initNavObserver();
-  // Add reveal to static home hero elements (already have class)
+  initLiveFeed(); // run immediately on load, not gated behind loadHome
   document.querySelectorAll('.home-hero .reveal').forEach(el => revealObserver.observe(el));
 });
