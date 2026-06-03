@@ -4,16 +4,6 @@ A full-stack event registration portal for **Notion VIT Bhopal** — a productiv
 
 ---
 
-## Screenshots
-
-> Add screenshots to a `/screenshots` folder and reference them here after taking them.
-
-| Home Page | Event Detail | Registration Form | Success Page |
-|-----------|-------------|-------------------|--------------|
-| ![Home](screenshots/home.png) | ![Event](screenshots/event.png) | ![Form](screenshots/form.png) | ![Success](screenshots/success.png) |
-
----
-
 ## Tech Stack
 
 | Layer | Technology |
