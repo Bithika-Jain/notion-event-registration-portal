@@ -875,24 +875,33 @@ function initLiveFeed() {
   if (!textEl) return;
 
   let idx = 0;
-  // Try to fetch real data first
-  fetch(`${API}/registrations`)
+
+  // Start rotating immediately — no waiting for API
+  textEl.textContent = FEED_MESSAGES[0];
+  const ticker = setInterval(() => {
+    idx = (idx + 1) % FEED_MESSAGES.length;
+    textEl.classList.remove('live-feed-text');
+    void textEl.offsetWidth;
+    textEl.classList.add('live-feed-text');
+    textEl.textContent = FEED_MESSAGES[idx];
+  }, 4000);
+
+  // Try to prepend a real registration in the background — fire and forget
+  // Use a 5s timeout so it never blocks
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+
+  fetch(`${API}/registrations`, { signal: controller.signal })
     .then(r => r.json())
     .then(data => {
+      clearTimeout(timeout);
       if (data.count > 0) {
         const recent = data.data[0];
-        FEED_MESSAGES.unshift(`${recent.fullName.split(' ')[0]} just registered for ${recent.event.title}`);
+        const msg = `${recent.fullName.split(' ')[0]} just registered for ${recent.event.title}`;
+        if (!FEED_MESSAGES.includes(msg)) FEED_MESSAGES.unshift(msg);
       }
-    }).catch(() => {}).finally(() => {
-      textEl.textContent = FEED_MESSAGES[0];
-      setInterval(() => {
-        idx = (idx + 1) % FEED_MESSAGES.length;
-        textEl.classList.remove('live-feed-text');
-        void textEl.offsetWidth; // reflow to restart animation
-        textEl.classList.add('live-feed-text');
-        textEl.textContent = FEED_MESSAGES[idx];
-      }, 4000);
-    });
+    })
+    .catch(() => clearTimeout(timeout)); // silently fail — ticker already running
 }
 
 // ── Event status track (injected into detail page) ───────────────────────────
