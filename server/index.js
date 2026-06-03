@@ -29,38 +29,29 @@ const registrationValidation = [
     .isLength({ min: 20, max: 1000 }).withMessage('Must be 20–1000 characters'),
 ];
 
-// ── API Routes ────────────────────────────────────────────────────────────────
+// ── Routes ────────────────────────────────────────────────────────────────────
 
-// GET /api/events — all events grouped by status
-app.get('/api/events', async (req, res) => {
-  const events = await query(`
-    SELECT e.*,
-      (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) as registered_count
+app.get('/api/events', (req, res) => {
+  const events = query(`
+    SELECT e.*, (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) as registered_count
     FROM events e
-    ORDER BY
-      CASE e.status WHEN 'upcoming' THEN 0 ELSE 1 END,
-      e.date ASC
+    ORDER BY CASE e.status WHEN 'upcoming' THEN 0 ELSE 1 END, e.date ASC
   `);
   res.json({ success: true, data: events });
 });
 
-// GET /api/events/:slug — single event with speakers & schedule
-app.get('/api/events/:slug', async (req, res) => {
-  const event = await queryOne(
+app.get('/api/events/:slug', (req, res) => {
+  const event = queryOne(
     `SELECT e.*, (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) as registered_count
-     FROM events e WHERE e.slug = ?`,
-    [req.params.slug]
+     FROM events e WHERE e.slug = ?`, [req.params.slug]
   );
   if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
-
-  const speakers = await query('SELECT * FROM speakers WHERE event_id = ? ORDER BY id', [event.id]);
-  const schedule = await query('SELECT * FROM schedule WHERE event_id = ? ORDER BY sort_order', [event.id]);
-
+  const speakers = query('SELECT * FROM speakers WHERE event_id = ? ORDER BY id', [event.id]);
+  const schedule = query('SELECT * FROM schedule WHERE event_id = ? ORDER BY sort_order', [event.id]);
   res.json({ success: true, data: { ...event, speakers, schedule } });
 });
 
-// POST /api/events/:slug/register — register for an event
-app.post('/api/events/:slug/register', registrationValidation, async (req, res) => {
+app.post('/api/events/:slug/register', registrationValidation, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -69,20 +60,13 @@ app.post('/api/events/:slug/register', registrationValidation, async (req, res) 
     });
   }
 
-  const event = await queryOne('SELECT * FROM events WHERE slug = ?', [req.params.slug]);
+  const event = queryOne('SELECT * FROM events WHERE slug = ?', [req.params.slug]);
   if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
-
-  if (event.status === 'past') {
-    return res.status(400).json({ success: false, message: 'Registrations are closed for past events' });
-  }
+  if (event.status === 'past') return res.status(400).json({ success: false, message: 'Registrations are closed for past events' });
 
   const { fullName, email, contactNumber, college, year, whyAttend } = req.body;
 
-  // Duplicate check
-  const existing = await queryOne(
-    'SELECT id FROM registrations WHERE event_id = ? AND email = ?',
-    [event.id, email]
-  );
+  const existing = queryOne('SELECT id FROM registrations WHERE event_id = ? AND email = ?', [event.id, email]);
   if (existing) {
     return res.status(409).json({
       success: false,
@@ -90,27 +74,18 @@ app.post('/api/events/:slug/register', registrationValidation, async (req, res) 
     });
   }
 
-  // Seats check
-  const regCount = (await queryOne(
-    'SELECT COUNT(*) as c FROM registrations WHERE event_id = ?',
-    [event.id]
-  )).c;
+  const regCount = queryOne('SELECT COUNT(*) as c FROM registrations WHERE event_id = ?', [event.id]).c;
   if (event.seats > 0 && regCount >= event.seats) {
     return res.status(409).json({ success: false, message: 'Sorry, this event is fully booked' });
   }
 
   try {
-    await insert(
+    insert(
       `INSERT INTO registrations (event_id, full_name, email, contact_number, college, year, why_attend)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [event.id, fullName, email, contactNumber, college, year, whyAttend]
     );
-
-    const registration = await queryOne(
-      'SELECT * FROM registrations WHERE event_id = ? AND email = ?',
-      [event.id, email]
-    );
-
+    const registration = queryOne('SELECT * FROM registrations WHERE event_id = ? AND email = ?', [event.id, email]);
     res.status(201).json({
       success: true,
       message: 'Registration successful!',
@@ -136,54 +111,38 @@ app.post('/api/events/:slug/register', registrationValidation, async (req, res) 
   }
 });
 
-// GET /api/events/:slug/registrations — all registrations for an event
-app.get('/api/events/:slug/registrations', async (req, res) => {
-  const event = await queryOne('SELECT id FROM events WHERE slug = ?', [req.params.slug]);
+app.get('/api/events/:slug/registrations', (req, res) => {
+  const event = queryOne('SELECT id FROM events WHERE slug = ?', [req.params.slug]);
   if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
-
-  const registrations = await query(
+  const registrations = query(
     `SELECT id, full_name, email, contact_number, college, year, why_attend, created_at
-     FROM registrations WHERE event_id = ? ORDER BY created_at DESC`,
-    [event.id]
+     FROM registrations WHERE event_id = ? ORDER BY created_at DESC`, [event.id]
   );
-
   res.json({
     success: true,
     count: registrations.length,
     data: registrations.map(r => ({
-      id: r.id,
-      fullName: r.full_name,
-      email: r.email,
-      contactNumber: r.contact_number,
-      college: r.college,
-      year: r.year,
-      whyAttend: r.why_attend,
-      registeredAt: r.created_at,
+      id: r.id, fullName: r.full_name, email: r.email,
+      contactNumber: r.contact_number, college: r.college,
+      year: r.year, whyAttend: r.why_attend, registeredAt: r.created_at,
     })),
   });
 });
 
-// GET /api/registrations — all registrations across all events
-app.get('/api/registrations', async (req, res) => {
-  const registrations = await query(`
+app.get('/api/registrations', (req, res) => {
+  const registrations = query(`
     SELECT r.id, r.full_name, r.email, r.contact_number, r.college, r.year, r.created_at,
            e.title as event_title, e.slug as event_slug, e.date as event_date
-    FROM registrations r
-    JOIN events e ON r.event_id = e.id
+    FROM registrations r JOIN events e ON r.event_id = e.id
     ORDER BY r.created_at DESC
   `);
-
   res.json({
     success: true,
     count: registrations.length,
     data: registrations.map(r => ({
-      id: r.id,
-      fullName: r.full_name,
-      email: r.email,
-      contactNumber: r.contact_number,
-      college: r.college,
-      year: r.year,
-      registeredAt: r.created_at,
+      id: r.id, fullName: r.full_name, email: r.email,
+      contactNumber: r.contact_number, college: r.college,
+      year: r.year, registeredAt: r.created_at,
       event: { title: r.event_title, slug: r.event_slug, date: r.event_date },
     })),
   });
@@ -195,29 +154,13 @@ app.get('*', (req, res) => {
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-// Initialize database (non-blocking for serverless)
-initDatabase()
-  .then(() => {
-    console.log('✅ Database initialized');
-  })
-  .catch(err => {
-    console.error('❌ DB init failed:', err);
+initDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`\n🚀  Notion VIT Portal  →  http://localhost:${PORT}`);
+    console.log('    GET  /api/events');
+    console.log('    GET  /api/events/:slug');
+    console.log('    POST /api/events/:slug/register');
+    console.log('    GET  /api/events/:slug/registrations');
+    console.log('    GET  /api/registrations\n');
   });
-
-// For local development
-if (require.main === module) {
-  initDatabase().then(() => {
-    app.listen(PORT, () => {
-      console.log(`\n🚀  Notion VIT Portal  →  http://localhost:${PORT}`);
-      console.log('📋  Endpoints:');
-      console.log(`    GET  /api/events`);
-      console.log(`    GET  /api/events/:slug`);
-      console.log(`    POST /api/events/:slug/register`);
-      console.log(`    GET  /api/events/:slug/registrations`);
-      console.log(`    GET  /api/registrations\n`);
-    });
-  });
-}
-
-// Export for Vercel
-module.exports = app;
+}).catch(err => { console.error('❌ DB init failed:', err); process.exit(1); });
