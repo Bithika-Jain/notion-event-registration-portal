@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notion VIT Bhopal — Events Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── NAVBAR ──────────────────────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" onclick="showPage('home');return false;">
+        <span class="logo-icon">◈</span>
+        <span>Notion <span class="logo-vit">VIT Bhopal</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('home');return false;" class="nav-link">Home</a>
+        <a href="#" onclick="scrollToSection('about-section');return false;" class="nav-link">About</a>
+        <a href="#" onclick="scrollToSection('events-section');return false;" class="nav-link">Events</a>
+        <a href="#" onclick="scrollToSection('team-section');return false;" class="nav-link">Team</a>
+        <a href="#" onclick="scrollToSection('testimonials-section');return false;" class="nav-link">Testimonials</a>
+        <a href="#" onclick="scrollToContact();return false;" class="nav-link">Contact</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+        <span class="theme-icon theme-icon-dark">🌙</span>
+        <span class="theme-icon theme-icon-light">☀️</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="page-home" class="page">
+
+    <section class="home-hero">
+      <div class="hero-bg-grid"></div>
+      <div class="hero-mesh">
+        <div class="mesh-blob mesh-blob-1"></div>
+        <div class="mesh-blob mesh-blob-2"></div>
+        <div class="mesh-blob mesh-blob-3"></div>
+      </div>
+      <div class="hero-glow g1"></div>
+      <div class="hero-glow g2"></div>
+      <div class="home-hero-inner">
+        <div class="hero-badge reveal"><span class="badge-dot"></span>VIT Bhopal's Tech Community</div>
+        <h1 class="home-title reveal reveal-delay-1">Notion <span class="grad">VIT Bhopal</span></h1>
+        <p class="home-subtitle reveal reveal-delay-2">Workshops, bootcamps &amp; sessions to help you build, learn, and connect.</p>
+        <div class="hero-cta-row reveal reveal-delay-3">
+          <a href="#events-section" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'});return false;" class="btn btn-primary">Explore Events</a>
+          <a href="#about-section" onclick="document.getElementById('about-section').scrollIntoView({behavior:'smooth'});return false;" class="btn btn-ghost">Learn More</a>
+        </div>
+        <div class="live-feed reveal reveal-delay-4" id="liveFeed">
+          <div class="live-dot"></div>
+          <span class="live-feed-text" id="liveFeedText">Loading registrations…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS ─────────────────────────────────────────────────── -->
+    <section class="stats-section">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <div class="stat-num-wrap"><span class="stat-num" data-target="500">0</span><span class="stat-plus">+</span></div>
+          <div class="stat-label">Members</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num-wrap"><span class="stat-num" data-target="50">0</span><span class="stat-plus">+</span></div>
+          <div class="stat-label">Events Hosted</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num-wrap"><span class="stat-num" data-target="20">0</span><span class="stat-plus">+</span></div>
+          <div class="stat-label">Workshops</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num-wrap"><span class="stat-num" data-target="15">0</span><span class="stat-plus">+</span></div>
+          <div class="stat-label">Awards Won</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ──────────────────────────────────────────────────── -->
+    <section class="about-section" id="about-section">
+      <div class="about-inner">
+        <div class="about-left">
+          <div class="section-eyebrow">About Us</div>
+          <h2 class="section-h2">Fueling the Curiosity of <span class="grad">Makers</span></h2>
+          <p class="about-desc">Notion VIT Bhopal is the campus productivity &amp; tech community dedicated to
+          fostering learning, building real projects, and creating a space where curious students
+          turn ideas into outcomes.</p>
+          <ul class="about-checklist">
+            <li><span class="check-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly hands-on workshops &amp; sessions</li>
+            <li><span class="check-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Mentorship from industry practitioners</li>
+            <li><span class="check-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Hackathons, bootcamps &amp; competitions</li>
+            <li><span class="check-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Notion templates &amp; productivity resources</li>
+          </ul>
+        </div>
+        <div class="about-right">
+          <div class="about-feature-grid">
+            <div class="about-feature-card">
+              <div class="afc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><polyline points="12 16 12.01 16"/></svg></div>
+              <h4>Ideate</h4>
+              <p>Turn vague curiosity into scoped, actionable project ideas through structured sessions.</p>
+            </div>
+            <div class="about-feature-card">
+              <div class="afc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+              <h4>Build</h4>
+              <p>Ship real projects with AI tools, dev stacks, and hands-on mentorship.</p>
+            </div>
+            <div class="about-feature-card">
+              <div class="afc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+              <h4>Connect</h4>
+              <p>Network with industry speakers, alumni, and a campus community of builders.</p>
+            </div>
+            <div class="about-feature-card">
+              <div class="afc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+              <h4>Grow</h4>
+              <p>Level up through masterclasses, certifications, and cross-domain exposure.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="events-section" id="events-section">
+      <div class="events-inner">
+        <div class="events-header-row">
+          <div>
+            <div class="section-eyebrow">Events</div>
+            <h2 class="section-h2">Upcoming &amp; Past Events</h2>
+          </div>
+        </div>
+        <!-- Filter tabs -->
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-filter="all">All Events</button>
+          <button class="filter-tab" data-filter="Workshop">Workshops</button>
+          <button class="filter-tab" data-filter="Bootcamp">Bootcamps</button>
+          <button class="filter-tab" data-filter="Hackathon">Hackathons</button>
+        </div>
+        <div class="section-block">
+          <div class="block-header">
+            <h2 class="block-title">Upcoming Events</h2>
+            <span class="block-badge upcoming-badge">Open for Registration</span>
+          </div>
+          <div class="events-grid" id="upcoming-grid">
+            <div class="skeleton-grid">
+              <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+            </div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="block-header">
+            <h2 class="block-title">Past Events</h2>
+            <span class="block-badge past-badge">Completed</span>
+          </div>
+          <div class="events-grid events-grid-past" id="past-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TEAM ───────────────────────────────────────────────────── -->
+    <section class="team-section" id="team-section">
+      <div class="team-inner">
+        <div class="section-eyebrow" style="text-align:center">Our Team</div>
+        <h2 class="section-h2" style="text-align:center">Meet the <span class="grad">Makers</span></h2>
+        <p class="section-subtext">The passionate people behind Notion VIT Bhopal who work to build a thriving community of learners and builders.</p>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">AK</div>
+            <div class="team-name">Arjun Kumar</div>
+            <div class="team-role">President</div>
+            <p class="team-bio">Leading the vision of Notion VIT Bhopal with a passion for productivity and tech education.</p>
+            <div class="team-socials">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">PR</div>
+            <div class="team-name">Priya Rao</div>
+            <div class="team-role">Vice President</div>
+            <p class="team-bio">Driving operations and ensuring smooth execution of all workshops and initiatives.</p>
+            <div class="team-socials">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">VS</div>
+            <div class="team-name">Vikram Singh</div>
+            <div class="team-role">Tech Lead</div>
+            <p class="team-bio">Building the technical backbone for club projects and open-source contributions.</p>
+            <div class="team-socials">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">AM</div>
+            <div class="team-name">Ananya Menon</div>
+            <div class="team-role">Events Head</div>
+            <p class="team-bio">Curating impactful events that inspire and educate members across all disciplines.</p>
+            <div class="team-socials">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">KR</div>
+            <div class="team-name">Karthik Reddy</div>
+            <div class="team-role">Marketing Lead</div>
+            <p class="team-bio">Growing our community across campus and spreading the word about each event.</p>
+            <div class="team-socials">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">SJ</div>
+            <div class="team-name">Sneha Joshi</div>
+            <div class="team-role">Design Lead</div>
+            <p class="team-bio">Crafting beautiful experiences and visual identities that make the club stand out.</p>
+            <div class="team-socials">
+              <a href="#" class="social-btn" aria-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a href="#" class="social-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ───────────────────────────────────────────── -->
+    <section class="testimonials-section" id="testimonials-section">
+      <div class="testimonials-inner">
+        <div class="section-eyebrow" style="text-align:center">Testimonials</div>
+        <h2 class="section-h2" style="text-align:center">What Our <span class="grad">Members Say</span></h2>
+        <p class="section-subtext">Hear from students who built real skills and real projects through Notion VIT Bhopal.</p>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="tcard-stars">★★★★★</div>
+            <p class="tcard-quote">"The Build with AI workshop completely changed how I approach problem-solving. I shipped my first working app in a single day — something I never thought possible as a 2nd year student."</p>
+            <div class="tcard-author">
+              <div class="tcard-av">RS</div>
+              <div><div class="tcard-name">Riya Sharma</div><div class="tcard-role">CSE · 2nd Year, VIT Bhopal</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="tcard-stars">★★★★★</div>
+            <p class="tcard-quote">"The Web3 bootcamp was incredibly well-structured. The mentors were patient and knowledgeable. I deployed my first dApp to testnet on day two — genuinely mind-blowing."</p>
+            <div class="tcard-author">
+              <div class="tcard-av">AK</div>
+              <div><div class="tcard-name">Arjun Kapoor</div><div class="tcard-role">ECE · 3rd Year, VIT Bhopal</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="tcard-stars">★★★★★</div>
+            <p class="tcard-quote">"I used to procrastinate everything. After the Notion Productivity Masterclass, I built a system that helped me ace my semester and finish two freelance projects simultaneously."</p>
+            <div class="tcard-author">
+              <div class="tcard-av">SM</div>
+              <div><div class="tcard-name">Sneha Mehta</div><div class="tcard-role">IT · 1st Year, VIT Bhopal</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="tcard-stars">★★★★★</div>
+            <p class="tcard-quote">"The Open Source Sprint got me my first merged PR on GitHub. That single contribution opened doors to two internship interviews. The club genuinely cares about student outcomes."</p>
+            <div class="tcard-author">
+              <div class="tcard-av">VN</div>
+              <div><div class="tcard-name">Varun Nair</div><div class="tcard-role">CSE · 4th Year, VIT Bhopal</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="tcard-stars">★★★★★</div>
+            <p class="tcard-quote">"Figma felt overwhelming before the UI/UX crash course. By the end of the day I had a complete mobile app prototype. The mentors broke it down beautifully — no fluff, all hands-on."</p>
+            <div class="tcard-author">
+              <div class="tcard-av">KP</div>
+              <div><div class="tcard-name">Kavita Pillai</div><div class="tcard-role">Design · 2nd Year, VIT Bhopal</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="tcard-stars">★★★★★</div>
+            <p class="tcard-quote">"Python for Data Science was the perfect starting point. From zero Python knowledge to training my first ML model in one session — the pace and structure were spot on."</p>
+            <div class="tcard-author">
+              <div class="tcard-av">DP</div>
+              <div><div class="tcard-name">Dev Pillai</div><div class="tcard-role">ECE · 2nd Year, VIT Bhopal</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONTACT ────────────────────────────────────────────────── -->
+    <section class="contact-section" id="contact-section">
+      <div class="contact-inner">
+        <div class="contact-header">
+          <div class="contact-label">Contact</div>
+          <h2 class="contact-title">Get In Touch</h2>
+          <p class="contact-subtitle">Have a question, idea, or want to collaborate? We'd love to hear from you.</p>
+        </div>
+        <div class="contact-grid">
+          <!-- Left: info -->
+          <div class="contact-left">
+            <h3>Let's Connect</h3>
+            <p>Whether you want to sponsor an event, speak at a workshop, or simply learn more about Notion VIT Bhopal — reach out and we'll get back to you within 24 hours.</p>
+            <div class="contact-info-cards">
+              <a href="mailto:notion.vitbhopal@gmail.com" class="contact-info-card">
+                <div class="ci-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                </div>
+                <div><div class="ci-label">Email</div><div class="ci-val">notion.vitbhopal@gmail.com</div></div>
+              </a>
+              <a href="#" class="contact-info-card">
+                <div class="ci-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div><div class="ci-label">Location</div><div class="ci-val">VIT Bhopal University, India</div></div>
+              </a>
+              <a href="tel:+919876543210" class="contact-info-card">
+                <div class="ci-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.09 4.18 2 2 0 015.09 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div><div class="ci-label">Phone</div><div class="ci-val">+91 98765 43210</div></div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: form -->
+          <div class="contact-form-wrap">
+            <form id="contactForm" onsubmit="submitContact(event)">
+              <div class="contact-form-grid">
+                <div class="cf-group">
+                  <label for="cf-name">Full Name</label>
+                  <input type="text" id="cf-name" placeholder="John Doe" required/>
+                </div>
+                <div class="cf-group">
+                  <label for="cf-email">Email</label>
+                  <input type="email" id="cf-email" placeholder="john@example.com" required/>
+                </div>
+                <div class="cf-group cf-group-full">
+                  <label for="cf-subject">Subject</label>
+                  <input type="text" id="cf-subject" placeholder="What's this about?"/>
+                </div>
+                <div class="cf-group cf-group-full">
+                  <label for="cf-message">Message <span id="cfMsgCount" class="cf-msg-count" style="float:right">0/500</span></label>
+                  <textarea id="cf-message" rows="5" maxlength="500" placeholder="Tell us more…"
+                    oninput="document.getElementById('cfMsgCount').textContent=this.value.length+'/500'" required></textarea>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-send" id="contactSubmitBtn">
+                <span id="contactBtnText">Send Message</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+              <div id="contactSuccess" class="contact-success hidden">
+                Message sent! We'll get back to you within 24 hours.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: EVENT DETAIL  (countdown + announce + speakers + FAQ + contact)
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="page-event" class="page hidden">
+    <div id="event-detail-content"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: REGISTER
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="page-register" class="page hidden">
+    <div class="reg-page-wrap">
+      <div id="reg-event-header"></div>
+      <div class="form-wrapper">
+        <form id="registrationForm" class="reg-form" novalidate>
+          <h2 class="form-title">Register for this Event</h2>
+          <p class="form-subtitle">Fill in your details below to secure your spot.</p>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fullName">Full Name <span class="req">*</span></label>
+              <input type="text" id="fullName" name="fullName" placeholder="e.g. Riya Sharma" maxlength="100" autocomplete="name"/>
+              <span class="field-error" id="fullName-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address <span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email"/>
+              <span class="field-error" id="email-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="contactNumber">Contact Number <span class="req">*</span></label>
+              <input type="tel" id="contactNumber" name="contactNumber" placeholder="10-digit mobile" maxlength="10" autocomplete="tel"/>
+              <span class="field-error" id="contactNumber-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="year">Year of Study <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select id="year" name="year">
+                  <option value="" disabled selected>Select year</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
+                  <option value="PG">Postgraduate</option>
+                  <option value="PhD">PhD</option>
+                </select>
+                <svg class="sel-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span class="field-error" id="year-error"></span>
+            </div>
+            <div class="form-group form-full">
+              <label for="college">College &amp; Branch <span class="req">*</span></label>
+              <input type="text" id="college" name="college" placeholder="e.g. VIT Bhopal — CSE" maxlength="200"/>
+              <span class="field-error" id="college-error"></span>
+            </div>
+            <div class="form-group form-full">
+              <label for="whyAttend">Why do you want to attend? <span class="req">*</span><span class="char-hint" id="charCount">0 / 1000</span></label>
+              <textarea id="whyAttend" name="whyAttend" rows="5" maxlength="1000" placeholder="Tell us what you hope to learn or build... (min. 20 characters)"></textarea>
+              <span class="field-error" id="whyAttend-error"></span>
+            </div>
+          </div>
+          <div class="form-footer">
+            <p class="form-privacy">Your data is only used for event coordination.</p>
+            <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
+              <span id="submitText">Register for Free</span>
+              <span id="submitSpinner" class="spinner hidden"></span>
+            </button>
+          </div>
+          <div id="formError" class="form-banner hidden"><span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span id="formErrorMsg"></span></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PAGE: SUCCESS
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="page-success" class="page hidden">
+    <div class="success-wrap">
+      <div class="success-icon">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="26" fill="#22c55e" fill-opacity="0.12"/>
+          <path d="M16 26l7 7 13-14" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="success-title">You're Registered!</h2>
+      <p class="success-sub">Your spot is confirmed. We'll see you there!</p>
+      <div class="success-card">
+        <div class="success-card-top">
+          <span class="success-club">Notion VIT Bhopal</span>
+          <span class="confirmed-badge">Confirmed</span>
+        </div>
+        <h3 id="sEventTitle" class="success-event-title">—</h3>
+        <div class="success-rows">
+          <div class="success-row"><span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span id="sName">—</span></div>
+          <div class="success-row"><span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span><span id="sEmail">—</span></div>
+          <div class="success-row"><span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span id="sDate">—</span></div>
+          <div class="success-row"><span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span id="sVenue">—</span></div>
+          <div class="success-row"><span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="8" y1="10" x2="12" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg></span><span>Reg. ID: <strong id="sId">—</strong></span></div>
+        </div>
+        <p class="success-note">Bring your laptop and curiosity. See you soon!</p>
+      </div>
+      <div class="success-actions">
+        <button class="btn btn-primary" onclick="showPage('home')">Browse More Events</button>
+        <button class="btn btn-ghost" id="backToEventBtn">Back to Event</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────────────── -->
+  <footer class="footer" id="main-footer">
+    <div class="footer-grid">
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand">
+          <span class="logo-icon">◈</span>
+          <span>Notion <span class="logo-vit">VIT Bhopal</span></span>
+        </div>
+        <p class="footer-desc">VIT Bhopal's productivity &amp; tech community — building the next generation of makers.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/notion.vit/" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://in.linkedin.com/company/notion_vit" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter/X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://youtube.com/" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.6 2.8 12 2.8 12 2.8s-4.6 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.2.7 11.5v2.1c0 2.2.3 4.4.3 4.4s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 22.1 12 22.1 12 22.1s4.6 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.2.3-4.4v-2.1C23.3 9.2 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#" onclick="showPage('home');return false;">Home</a></li>
+          <li><a href="#" onclick="document.getElementById('about-section').scrollIntoView({behavior:'smooth'});showPage('home');return false;">About</a></li>
+          <li><a href="#" onclick="document.getElementById('events-section').scrollIntoView({behavior:'smooth'});return false;">Events</a></li>
+          <li><a href="#" onclick="document.getElementById('team-section').scrollIntoView({behavior:'smooth'});showPage('home');return false;">Team</a></li>
+          <li><a href="#" onclick="scrollToContact();return false;">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Resources</h4>
+        <ul class="footer-links">
+          <li><a href="https://notion.so" target="_blank" rel="noopener">Notion Templates</a></li>
+          <li><a href="#" onclick="showPage('home');return false;">FAQs</a></li>
+          <li><a href="mailto:notion.vitbhopal@gmail.com">Partnership</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col-title">Stay Updated</h4>
+        <p class="footer-newsletter-desc">Get notified about upcoming events and workshops.</p>
+        <div class="footer-newsletter">
+          <input type="email" placeholder="Your email address" class="newsletter-input" id="newsletterEmail"/>
+          <button class="btn btn-primary btn-sm newsletter-btn" onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+        <p class="newsletter-msg hidden" id="newsletterMsg"></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Notion VIT Bhopal · VIT Bhopal University, India</p>
+      <a href="#" class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="Back to top">↑</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+</body>
+</html>
