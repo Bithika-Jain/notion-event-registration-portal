@@ -23,11 +23,11 @@ Open these URLs directly in your browser — each returns live JSON from the API
 
 | Home Page | Event Detail |
 |-----------|-------------|
-| ![Home](screenshots/event regitration 1.png) | ![Event](screenshots/events.png) |
+| ![Home](screenshots/homepage1.png) | ![Event](screenshots/eventregistration1.png) |
 
 | Registration Form | Success Page |
 |-------------------|--------------|
-| ![Form](screenshots/event regitration 1.png) | ![Success](screenshots/registration confirmed.png) |
+| ![Form](screenshots/registrationform.png) | ![Success](screenshots/registrationconfirmed.png) |
 
 ---
 
