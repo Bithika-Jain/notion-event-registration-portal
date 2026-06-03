@@ -195,14 +195,39 @@ app.get('*', (req, res) => {
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-initDatabase().then(() => {
-  app.listen(PORT, () => {
-    console.log(`\n🚀  Notion VIT Portal  →  http://localhost:${PORT}`);
-    console.log('📋  Endpoints:');
-    console.log(`    GET  /api/events`);
-    console.log(`    GET  /api/events/:slug`);
-    console.log(`    POST /api/events/:slug/register`);
-    console.log(`    GET  /api/events/:slug/registrations`);
-    console.log(`    GET  /api/registrations\n`);
+// Initialize database before handling requests
+let dbInitialized = false;
+const initPromise = initDatabase()
+  .then(() => {
+    dbInitialized = true;
+    console.log('✅ Database initialized');
+  })
+  .catch(err => {
+    console.error('❌ DB init failed:', err);
   });
-}).catch(err => { console.error('❌ DB init failed:', err); process.exit(1); });
+
+// Middleware to ensure DB is initialized before handling requests
+app.use(async (req, res, next) => {
+  if (!dbInitialized) {
+    await initPromise;
+  }
+  next();
+});
+
+// For local development
+if (require.main === module) {
+  initPromise.then(() => {
+    app.listen(PORT, () => {
+      console.log(`\n🚀  Notion VIT Portal  →  http://localhost:${PORT}`);
+      console.log('📋  Endpoints:');
+      console.log(`    GET  /api/events`);
+      console.log(`    GET  /api/events/:slug`);
+      console.log(`    POST /api/events/:slug/register`);
+      console.log(`    GET  /api/events/:slug/registrations`);
+      console.log(`    GET  /api/registrations\n`);
+    });
+  });
+}
+
+// Export for Vercel
+module.exports = app;

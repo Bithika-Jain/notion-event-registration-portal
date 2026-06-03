@@ -1,25 +1,10 @@
 const initSqlJs = require('sql.js');
-const path = require('path');
-const fs = require('fs');
-
-const dataDir = path.join(__dirname, '../data');
-const dbPath = path.join(dataDir, 'portal.db');
-
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
 
 let _db = null;
 
 async function initDatabase() {
   const SQL = await initSqlJs();
-
-  if (fs.existsSync(dbPath)) {
-    const fileBuffer = fs.readFileSync(dbPath);
-    _db = new SQL.Database(fileBuffer);
-  } else {
-    _db = new SQL.Database();
-  }
+  _db = new SQL.Database();
 
   _db.run(`
     CREATE TABLE IF NOT EXISTS events (
@@ -84,10 +69,9 @@ async function initDatabase() {
     )
   `);
 
-  persist();
   seedEvents();
 
-  console.log('✅ Database initialised at:', dbPath);
+  console.log('✅ Database initialised (in-memory)');
   return _db;
 }
 
@@ -197,18 +181,12 @@ function seedEvents() {
   const e6 = query('SELECT id FROM events WHERE slug = ?', ['python-for-data-science'])[0].id;
   run(`INSERT INTO speakers (event_id, name, role, bio, initials) VALUES (${e6}, 'Meera Krishnan', 'Data Scientist · Flipkart', 'Built recommendation systems at scale. Kaggle expert.', 'MK')`);
 
-  persist();
   console.log('🌱 Sample events seeded');
 }
 
 // ── DB helpers ───────────────────────────────────────────────────────────────
-function persist() {
-  if (_db) fs.writeFileSync(dbPath, Buffer.from(_db.export()));
-}
-
 function run(sql, params = []) {
   _db.run(sql, params);
-  persist();
 }
 
 function query(sql, params = []) {
@@ -227,7 +205,6 @@ function queryOne(sql, params = []) {
 function insert(sql, params = []) {
   _db.run(sql, params);
   const result = _db.exec('SELECT last_insert_rowid() as id');
-  persist();
   return result[0]?.values[0][0] ?? null;
 }
 
